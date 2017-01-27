@@ -3,22 +3,16 @@ import math
 
 
 def mutual_information(x, y):
-    xy = list(zip(x, y))
-    l = len(x)
+    n = len(x) + 1
+    xy = list(x)
+    xy.append(y)
+    xy = list(zip(*xy))
+    x = list(zip(*x))
+    l = len(y)
     mi = 0
-    binary_sequences = list(itertools.product([0, 1], repeat=2))
-    for (i, j) in binary_sequences:
-        if xy.count((i, j)):
-            mi += (xy.count((i, j)) / l) * math.log2((xy.count((i, j)) * l) / (x.count(i) * y.count(j)))
-    return mi
-
-def mutual_information_3(x, y, z):
-    xy = list(zip(x, y))
-    xyz = list(zip(x, y, z))
-    l = len(x)
-    mi = 0
-    binary_sequences = list(itertools.product([0, 1], repeat=3))
-    for (i, j, k) in binary_sequences:
-        if xyz.count((i, j, k)):
-            mi += (xyz.count((i, j, k)) / l) * math.log2((xyz.count((i, j, k)) * l) / (xy.count((i, j)) * y.count(k)))
+    binary_sequences = list(itertools.product([0, 1], repeat=n))
+    for binary_sequence in binary_sequences:
+        if xy.count(binary_sequence):
+            mi += (xy.count(binary_sequence) / l) * \
+                  math.log2((xy.count(binary_sequence) * l) / (x.count(binary_sequence[:-1]) * y.count(binary_sequence[-1])))
     return mi
